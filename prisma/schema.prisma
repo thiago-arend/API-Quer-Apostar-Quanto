@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Bet {
+  id            Int         @id @default(autoincrement())
+  homeTeamScore Int
+  awayTeamScore Int
+  amountBet     Int
+  gameId        Int
+  participantId Int
+  status        String
+  amountWon     Int?
+  createdAt     DateTime?   @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime    @db.Timestamp(6)
+  game          Game        @relation(fields: [gameId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Game {
+  id            Int       @id @default(autoincrement())
+  homeTeamName  String
+  awayTeamName  String
+  homeTeamScore Int
+  awayTeamScore Int
+  isFinished    Boolean
+  createdAt     DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @db.Timestamp(6)
+  bet           Bet[]
+}
+
+model Participant {
+  id        Int       @id @default(autoincrement())
+  name      String
+  balance   Int
+  createdAt DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt DateTime  @db.Timestamp(6)
+  bet       Bet[]
+}
