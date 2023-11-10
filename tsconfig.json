@@ -7,10 +7,6 @@
     "baseUrl": "src",
     "ts-node": {
       "esm": true
-    },
-    "include": [
-      "src",
-      "tests"
-    ]
+    }
   }
 }
