@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "precommit": "lint-staged",
-    "build": "npm i && tsc && npx tsc-alias",
+    "build": "npx tsc",
     "start": "node ./dist/server.js",
     "dev": "cross-env NODE_ENV=development nodemon ./src/server.ts",
     "test:load-envs": "dotenv -e .env.test",
