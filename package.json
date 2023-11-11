@@ -17,7 +17,7 @@
     "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
     "test:migration:generate": "npm run test:load-envs prisma migrate dev",
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
-    "prod:migration:run": "prisma migrate deploy",
+    "prod:migration:run": "npx prisma migrate deploy",
     "lint": "eslint .",
     "prepare": "husky install"
   },
