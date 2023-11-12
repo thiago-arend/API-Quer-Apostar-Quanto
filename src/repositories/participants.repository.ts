@@ -1,5 +1,5 @@
 import prisma from "../config/database";
-import { ParticipantInput } from "protocols";
+import { ParticipantInput } from "../protocols/index";
 
 function create(participant: ParticipantInput) {
   return prisma.participant.create({
