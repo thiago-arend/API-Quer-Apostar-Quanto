@@ -16,8 +16,8 @@ model Bet {
   participantId Int
   status        String
   amountWon     Int?
-  createdAt     DateTime?   @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime    @db.Timestamp(6)
+  createdAt     DateTime?   @default(now())
+  updatedAt     DateTime @updatedAt
   game          Game        @relation(fields: [gameId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   participant   Participant @relation(fields: [participantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -29,8 +29,8 @@ model Game {
   homeTeamScore Int
   awayTeamScore Int
   isFinished    Boolean
-  createdAt     DateTime? @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime  @db.Timestamp(6)
+  createdAt     DateTime? @default(now())
+  updatedAt     DateTime @updatedAt
   bet           Bet[]
 }
 
@@ -38,7 +38,7 @@ model Participant {
   id        Int       @id @default(autoincrement())
   name      String
   balance   Int
-  createdAt DateTime? @default(now()) @db.Timestamp(6)
-  updatedAt DateTime  @db.Timestamp(6)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime @updatedAt
   bet       Bet[]
 }
