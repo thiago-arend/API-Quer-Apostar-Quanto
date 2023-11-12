@@ -1,7 +1,7 @@
 import prisma from "../config/database";
-import { ParticipantInput } from "../protocols/index";
+import { ParticipantTableInput } from "../protocols/index";
 
-async function create(participant: ParticipantInput) {
+async function create(participant: ParticipantTableInput) {
   return prisma.participant.create({
     data: participant,
   });

@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { Participant } from "@prisma/client";
-import { ParticipantInput } from "../../src/protocols/index";
+import { ParticipantBodyInput } from "../../src/protocols/index";
 
 // by default, generates a balance value that fits in integer type
-export function mockParticipantInput(balance?: number): ParticipantInput {
+export function mockParticipantInput(balance?: number): ParticipantBodyInput {
   return {
     name: faker.person.fullName(),
     balance: balance || faker.number.int({ min: 10, max: 2147483647 }),

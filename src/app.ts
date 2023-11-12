@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import participantsRouter from "./routers/participants.router";
 import { handleApplicationErrors } from "./middlewares/errorHandler";
+import gamesRouter from "routers/games.router";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(json());
 
 app.get("/health", (req: Request, res: Response) => res.send("OK!"));
 app.use(participantsRouter);
+app.use(gamesRouter);
 app.use(handleApplicationErrors);
 
 export default app;

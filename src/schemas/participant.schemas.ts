@@ -1,7 +1,7 @@
 import joi from "joi";
-import { ParticipantInput } from "../protocols/index";
+import { ParticipantBodyInput } from "../protocols/index";
 
-export const participantSchema = joi.object<ParticipantInput>({
+export const participantSchema = joi.object<ParticipantBodyInput>({
   name: joi.string().required(),
   balance: joi.number().required(),
 });
