@@ -2,7 +2,7 @@ import supertest from "supertest";
 import httpStatus from "http-status";
 import app from "../../src/app";
 import { cleanDb } from "../utils";
-import { mockParticipant } from "../factories/participants.factory";
+import { mockParticipantInput } from "../factories/participants.factory";
 import prisma from "../../src/config/database";
 
 beforeEach(() => {
@@ -14,7 +14,7 @@ const api = supertest(app);
 describe("Participants Integration Tests", () => {
   describe("POST /participants", () => {
     it("should return 201 and a participant if a valid participant can be created", async () => {
-      const participant = mockParticipant();
+      const participant = mockParticipantInput();
       const { status, body } = await api.post("/participants").send(participant);
 
       expect(status).toBe(httpStatus.CREATED);
