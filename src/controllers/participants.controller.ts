@@ -5,9 +5,9 @@ import { participantsService } from "services/participants.service";
 
 export async function create(req: Request, res: Response) {
   const participantInput = req.body as ParticipantInput;
-
   const participantResult = await participantsService.create(participantInput);
-  res.send(participantResult).status(httpStatus.CREATED);
+
+  res.status(httpStatus.CREATED).send(participantResult);
 }
 
 export const participantsController = {
