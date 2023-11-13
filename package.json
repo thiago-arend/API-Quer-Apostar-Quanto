@@ -6,7 +6,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "build": "tsc",
-    "start": "npm run prod:migration:run && node ./dist/src/server.js",
+    "start": "node ./dist/src/server.js",
     "dev": "npm run dev:load-envs -- nodemon ./src/server.ts",
     "test:load-envs": "dotenv -e .env.test",
     "dev:load-envs": "dotenv -e .env.development",
