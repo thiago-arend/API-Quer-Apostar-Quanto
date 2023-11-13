@@ -10,6 +10,13 @@ export async function create(req: Request, res: Response) {
   res.status(httpStatus.CREATED).send(participantResult);
 }
 
+export async function getAll(req: Request, res: Response) {
+  const participantsResult = await participantsService.getAll();
+
+  res.status(httpStatus.OK).send(participantsResult);
+}
+
 export const participantsController = {
   create,
+  getAll,
 };

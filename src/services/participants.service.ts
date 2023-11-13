@@ -8,6 +8,11 @@ async function create(participant: ParticipantBodyInput) {
   return participantsRepository.create(participant);
 }
 
+async function getAll() {
+  return participantsRepository.getAll();
+}
+
 export const participantsService = {
   create,
+  getAll,
 };

@@ -13,6 +13,10 @@ async function get(id: number) {
   });
 }
 
+async function getAll() {
+  return prisma.participant.findMany();
+}
+
 async function updateBalance(id: number, balance: number) {
   return prisma.participant.update({
     where: { id },
@@ -23,5 +27,6 @@ async function updateBalance(id: number, balance: number) {
 export const participantsRepository = {
   create,
   get,
+  getAll,
   updateBalance,
 };

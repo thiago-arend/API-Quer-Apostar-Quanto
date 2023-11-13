@@ -6,5 +6,6 @@ import { participantSchema } from "../schemas/participant.schemas";
 const participantsRouter = Router();
 
 participantsRouter.post("/participants", validateSchemaMiddleware(participantSchema), participantsController.create);
+participantsRouter.get("/participants", participantsController.getAll);
 
 export default participantsRouter;
