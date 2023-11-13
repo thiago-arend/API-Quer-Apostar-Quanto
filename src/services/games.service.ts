@@ -58,6 +58,10 @@ async function create(game: GameBodyInput) {
   return gamesRepository.create(gameTableInput);
 }
 
+async function getAll() {
+  return gamesRepository.getAll();
+}
+
 async function finishGame(id: number, finishedGame: GameFinishInput) {
   const game = await gamesRepository.get(id);
   if (!game) throw notFound();
@@ -78,5 +82,6 @@ async function finishGame(id: number, finishedGame: GameFinishInput) {
 
 export const gamesService = {
   create,
+  getAll,
   finishGame,
 };

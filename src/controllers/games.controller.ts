@@ -22,7 +22,14 @@ export async function finishGame(req: Request, res: Response) {
   res.status(httpStatus.OK).send(finishGameResult);
 }
 
+export async function getAll(req: Request, res: Response) {
+  const gamesResult = await gamesService.getAll();
+
+  res.status(httpStatus.OK).send(gamesResult);
+}
+
 export const gamesController = {
   create,
   finishGame,
+  getAll,
 };

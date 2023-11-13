@@ -13,6 +13,10 @@ async function get(id: number) {
   });
 }
 
+async function getAll() {
+  return prisma.game.findMany();
+}
+
 async function update(id: number, homeTeamScore: number, awayTeamScore: number) {
   return prisma.game.update({
     where: { id },
@@ -27,5 +31,6 @@ async function update(id: number, homeTeamScore: number, awayTeamScore: number) 
 export const gamesRepository = {
   create,
   get,
+  getAll,
   update,
 };
