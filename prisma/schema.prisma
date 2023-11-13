@@ -44,9 +44,3 @@ model Participant {
   updatedAt DateTime  @updatedAt
   bet       Bet[]
 }
-
-enum BetStatus {
-  PENDING
-  WON
-  LOST
-}
