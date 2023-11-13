@@ -72,7 +72,7 @@ There are several things you need to do when you add new ENV VARIABLES:
 
 ## Routes available
 ### POST /participants
-Cria um participante com determinado saldo inicial.
+Creates a participant with initial balance.
 
 Entry: name and initial participant balance.
 ```json
