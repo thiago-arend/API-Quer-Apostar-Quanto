@@ -16,7 +16,7 @@ export function handleApplicationErrors(err: ApplicationError | Error, _req: Req
     });
   }
 
-  if (err.name === "BetValueIsBiggerThanParticipantsBalanceError" || err.name === "AttemptToBetOnFinishedGameError") {
+  if (err.name === "BetValueIsBiggerThanParticipantsBalanceError" || err.name === "AttemptToBetOnFinishedGameError" || err.name === "MinimumBetValueError") {
     return res.status(httpStatus.FORBIDDEN).send({
       message: err.message,
     });

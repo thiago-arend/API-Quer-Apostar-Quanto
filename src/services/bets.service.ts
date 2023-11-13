@@ -5,7 +5,8 @@ import { betValueIsBiggerThanParticipantsBalance } from "../errors/betValueIsBig
 import { notFound } from "../errors/notFoundError";
 import { gamesRepository } from "../repositories/games.repository";
 import { attemptToBetOnFinishedGame } from "../errors/attemptToBetOnFinishedGameError";
-import prisma from "config/database";
+import prisma from "../config/database";
+import { minimumBetValue } from "../errors/minimumBetValueError";
 
 async function validateBetCreationAndReturnParticipantOrThrow(bet: BetBodyInput) {
   const participant = await participantsRepository.get(bet.participantId);
@@ -14,6 +15,7 @@ async function validateBetCreationAndReturnParticipantOrThrow(bet: BetBodyInput)
 
   if (game.isFinished) throw attemptToBetOnFinishedGame();
   if (bet.amountBet > participant.balance) throw betValueIsBiggerThanParticipantsBalance();
+  if (bet.amountBet < 100) throw minimumBetValue();
 
   return participant;
 }
