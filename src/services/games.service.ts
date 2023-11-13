@@ -35,7 +35,7 @@ async function updateBetsStatusAndParticipantsBalance(
 ) {
   betsList.forEach(async (b: Bet) => {
     if (wonBet(b, finishedGame)) {
-      const amountWon = calculateAmountWont(b.amountBet, allBetsTotalValue, allWinnerBetsTotalValue);
+      const amountWon = Math.floor(calculateAmountWont(b.amountBet, allBetsTotalValue, allWinnerBetsTotalValue));
       const participant = await participantsRepository.get(b.participantId);
       await betsRepository.update(b.id, amountWon);
       await participantsRepository.updateBalance(b.participantId, participant.balance + amountWon);
@@ -63,8 +63,8 @@ async function finishGame(id: number, finishedGame: GameFinishInput) {
   if (!game) throw notFound();
   if (game.isFinished) throw gameIsFinished();
 
-  await prisma.$transaction(async () => {
-    await gamesRepository.update(id, finishedGame.homeTeamScore, finishedGame.awayTeamScore);
+  return await prisma.$transaction(async () => {
+    const updatedGame = await gamesRepository.update(id, finishedGame.homeTeamScore, finishedGame.awayTeamScore);
     const betsList = await betsRepository.getAllByGameId(id);
 
     const { allBetsTotalValue, allWinnerBetsTotalValue } = calculateAllBetsAndWinningBetsBalance(
@@ -72,6 +72,7 @@ async function finishGame(id: number, finishedGame: GameFinishInput) {
       finishedGame,
     );
     await updateBetsStatusAndParticipantsBalance(betsList, finishedGame, allBetsTotalValue, allWinnerBetsTotalValue);
+    return updatedGame;
   });
 }
 
