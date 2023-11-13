@@ -1,10 +1,12 @@
 # Bet API
 
-This is an API for a betting house.
-
 ## About
 
 This is an API for a betting house. You can use multiple routes simulating interaction at a real bet house.
+
+## Deploy
+
+You can test this API routes using deploy url: https://bet-api-ies2.onrender.com
 
 ## How to run for development
 
