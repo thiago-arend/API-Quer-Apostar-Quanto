@@ -7,7 +7,7 @@ import { gamesRepository } from "../repositories/games.repository";
 import { calculateAmountWont, wonBet } from "../utils/index";
 import { participantsRepository } from "../repositories/participants.repository";
 import { notFound } from "../errors/notFoundError";
-import prisma from "config/database";
+import prisma from "../config/database";
 
 function calculateAllBetsAndWinningBetsBalance(betsList: Bet[], finishedGame: GameFinishInput) {
   let allBetsTotalValue = 0;
