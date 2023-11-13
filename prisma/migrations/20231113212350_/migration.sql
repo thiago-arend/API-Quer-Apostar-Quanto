@@ -4,9 +4,6 @@
   - You are about to drop the `Bet` table. If the table is not empty, all the data it contains will be lost.
 
 */
--- CreateEnum
-CREATE TYPE "BetStatus" AS ENUM ('PENDING', 'WON', 'LOST');
-
 -- DropForeignKey
 ALTER TABLE "Bet" DROP CONSTRAINT "Bet_gameId_fkey";
 
