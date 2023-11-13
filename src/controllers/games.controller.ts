@@ -28,8 +28,18 @@ export async function getAll(req: Request, res: Response) {
   res.status(httpStatus.OK).send(gamesResult);
 }
 
+export async function getWithBets(req: Request, res: Response) {
+  const id = parseInt(req.params.id);
+
+  if (!validateId(id)) throw idIsNotValid();
+  const gameWithBets = await gamesService.getWithBets(id);
+
+  res.status(httpStatus.OK).send(gameWithBets);
+}
+
 export const gamesController = {
   create,
   finishGame,
+  getWithBets,
   getAll,
 };

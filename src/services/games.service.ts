@@ -62,6 +62,13 @@ async function getAll() {
   return gamesRepository.getAll();
 }
 
+async function getWithBets(id: number) {
+  const gameWithBets = await gamesRepository.getWithBets(id);
+  if (!gameWithBets) throw notFound();
+
+  return gameWithBets;
+}
+
 async function finishGame(id: number, finishedGame: GameFinishInput) {
   const game = await gamesRepository.get(id);
   if (!game) throw notFound();
@@ -83,5 +90,6 @@ async function finishGame(id: number, finishedGame: GameFinishInput) {
 export const gamesService = {
   create,
   getAll,
+  getWithBets,
   finishGame,
 };

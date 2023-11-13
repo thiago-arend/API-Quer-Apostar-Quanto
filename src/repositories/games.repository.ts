@@ -13,6 +13,13 @@ async function get(id: number) {
   });
 }
 
+async function getWithBets(id: number) {
+  return prisma.game.findUnique({
+    where: { id },
+    include: { bet: true },
+  });
+}
+
 async function getAll() {
   return prisma.game.findMany();
 }
@@ -32,5 +39,6 @@ export const gamesRepository = {
   create,
   get,
   getAll,
+  getWithBets,
   update,
 };
