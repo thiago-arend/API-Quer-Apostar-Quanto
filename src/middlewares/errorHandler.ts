@@ -10,14 +10,20 @@ export type ApplicationError = {
 export function handleApplicationErrors(err: ApplicationError | Error, _req: Request, res: Response, _next: NextFunction) {
   console.log(err);
 
-  if (err.name === "InsufficientBalanceForParticipantError") {
+  if (err.name === "InsufficientBalanceForParticipantError" || err.name === "GameWithEqualTeamNamesError") {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
     });
   }
 
-  if (err.name === "GameWithEqualTeamNamesError") {
-    return res.status(httpStatus.BAD_REQUEST).send({
+  if (err.name === "BetValueIsBiggerThanParticipantsBalanceError" || err.name === "AttemptToBetOnFinishedGameError") {
+    return res.status(httpStatus.FORBIDDEN).send({
+      message: err.message,
+    });
+  }
+
+  if (err.name === "NotFoundError") {
+    return res.status(httpStatus.NOT_FOUND).send({
       message: err.message,
     });
   }

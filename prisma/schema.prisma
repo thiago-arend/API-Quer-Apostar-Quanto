@@ -17,7 +17,7 @@ model Bet {
   status        String
   amountWon     Int?
   createdAt     DateTime?   @default(now())
-  updatedAt     DateTime @updatedAt
+  updatedAt     DateTime    @updatedAt
   game          Game        @relation(fields: [gameId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   participant   Participant @relation(fields: [participantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -30,7 +30,7 @@ model Game {
   awayTeamScore Int
   isFinished    Boolean
   createdAt     DateTime? @default(now())
-  updatedAt     DateTime @updatedAt
+  updatedAt     DateTime  @updatedAt
   bet           Bet[]
 }
 
@@ -39,6 +39,12 @@ model Participant {
   name      String
   balance   Int
   createdAt DateTime? @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime  @updatedAt
   bet       Bet[]
+}
+
+enum BetStatus {
+  PENDING
+  WON
+  LOST
 }

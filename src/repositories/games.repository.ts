@@ -7,6 +7,13 @@ async function create(game: GameTableInput) {
   });
 }
 
+async function get(id: number) {
+  return prisma.game.findUnique({
+    where: { id },
+  });
+}
+
 export const gamesRepository = {
   create,
+  get,
 };
