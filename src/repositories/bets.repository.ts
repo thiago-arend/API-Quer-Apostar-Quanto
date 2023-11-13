@@ -8,22 +8,18 @@ async function create(bet: BetTableInput) {
 }
 
 async function update(id: number, amountWon?: number) {
-  if (!amountWon) {
-    return prisma.bet.update({
-      where: { id },
-      data: {
-        status: "LOST",
-        amountWon: 0,
-      },
-    });
+  const betUpdate = {
+    status: "LOST",
+    amountWon: 0,
+  };
+
+  if (amountWon) {
+    (betUpdate.status = "WON"), (betUpdate.amountWon = amountWon);
   }
 
   return prisma.bet.update({
     where: { id },
-    data: {
-      status: "WON",
-      amountWon,
-    },
+    data: { ...betUpdate },
   });
 }
 
@@ -33,30 +29,8 @@ async function getAllByGameId(gameId: number) {
   });
 }
 
-async function sumAllWinnerBetsValue(gameId: number) {
-  return prisma.bet.groupBy({
-    by: ["gameId"],
-    _sum: {
-      amountBet: true,
-    },
-    where: { gameId, status: "WON" },
-  });
-}
-
-async function sumAllBetsValue(gameId: number) {
-  return prisma.bet.groupBy({
-    by: ["gameId"],
-    _sum: {
-      amountBet: true,
-    },
-    where: { gameId },
-  });
-}
-
 export const betsRepository = {
   create,
   update,
-  sumAllWinnerBetsValue,
-  sumAllBetsValue,
   getAllByGameId,
 };
