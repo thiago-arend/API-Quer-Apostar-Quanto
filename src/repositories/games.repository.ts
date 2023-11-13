@@ -13,7 +13,19 @@ async function get(id: number) {
   });
 }
 
+async function update(id: number, homeTeamScore: number, awayTeamScore: number) {
+  return prisma.game.update({
+    where: { id },
+    data: {
+      isFinished: true,
+      homeTeamScore,
+      awayTeamScore,
+    },
+  });
+}
+
 export const gamesRepository = {
   create,
   get,
+  update,
 };
