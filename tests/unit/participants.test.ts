@@ -3,6 +3,14 @@ import { participantsService } from "../../src/services/participants.service";
 import { insufficientBalanceForParticipant } from "../../src/errors/insufficientBalanceForParticipantError";
 import { participantsRepository } from "../../src/repositories/participants.repository";
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+afterAll(() => {
+  jest.clearAllMocks();
+});
+
 describe("Participants Unit Tests", () => {
   it("should return a participant when trying to create participant with balance equal or bigger than $10.00", async () => {
     const fakeParticipant = mockParticipant(1000);

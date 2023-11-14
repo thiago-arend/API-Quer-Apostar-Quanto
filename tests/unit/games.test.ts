@@ -3,6 +3,14 @@ import { gamesRepository } from "../../src/repositories/games.repository";
 import { mockGame, mockGameInput } from "../factories/games.factory";
 import { gameWithEqualTeamNames } from "../../src/errors/gameWithEqualTeamNamesError";
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+afterAll(() => {
+  jest.clearAllMocks();
+});
+
 describe("Games Unit Tests", () => {
   it("should return a game when trying to create game with different team names", async () => {
     const fakeGame = mockGame();
