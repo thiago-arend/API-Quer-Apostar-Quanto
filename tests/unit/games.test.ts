@@ -7,10 +7,6 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-afterAll(() => {
-  jest.clearAllMocks();
-});
-
 describe("Games Unit Tests", () => {
   it("should return a game when trying to create game with different team names", async () => {
     const fakeGame = mockGame();

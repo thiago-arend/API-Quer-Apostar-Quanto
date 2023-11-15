@@ -7,10 +7,6 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-afterAll(() => {
-  jest.clearAllMocks();
-});
-
 describe("Participants Unit Tests", () => {
   it("should return a participant when trying to create participant with balance equal or bigger than $10.00", async () => {
     const fakeParticipant = mockParticipant(1000);

@@ -5,15 +5,13 @@ import { cleanDb } from "../utils";
 import { mockParticipantInput } from "../factories/participants.factory";
 import prisma from "../../src/config/database";
 
-beforeEach(() => {
-  cleanDb();
-});
-
 const api = supertest(app);
 
 describe("Participants Integration Tests", () => {
   describe("POST /participants", () => {
     it("should return 201 and a participant if a valid participant can be created", async () => {
+      await cleanDb();
+
       const participant = mockParticipantInput();
       const { status, body } = await api.post("/participants").send(participant);
 
@@ -30,6 +28,8 @@ describe("Participants Integration Tests", () => {
       const participantPersisted = await prisma.participant.findUnique({
         where: { id: body.id },
       });
+      console.log(participantPersisted);
+
       expect(participantPersisted).not.toBeNull();
       expect(body).toEqual({
         ...participantPersisted,

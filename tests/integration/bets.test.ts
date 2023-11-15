@@ -7,15 +7,13 @@ import { createParticipant } from "../factories/participants.factory";
 import { createGame } from "../factories/games.factory";
 import { mockBetInput } from "../factories/bets.factory";
 
-beforeEach(() => {
-  cleanDb();
-});
-
 const api = supertest(app);
 
 describe("Bets Integration Tests", () => {
   describe("POST /bets", () => {
     it("should return 201 and a bet if a valid bet can be created", async () => {
+      await cleanDb();
+
       const participant = await createParticipant();
       const game = await createGame(false);
       const betInput = mockBetInput(participant.id, game.id, participant.balance);
@@ -37,6 +35,8 @@ describe("Bets Integration Tests", () => {
       const betPersisted = await prisma.bet.findUnique({
         where: { id: body.id },
       });
+      console.log(betPersisted);
+
       expect(betPersisted).not.toBeNull();
       expect(body).toEqual({
         ...betPersisted,

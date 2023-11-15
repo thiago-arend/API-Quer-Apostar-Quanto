@@ -7,7 +7,7 @@ import prisma from "config/database";
 export function mockParticipantInput(balance?: number): ParticipantBodyInput {
   return {
     name: faker.person.fullName(),
-    balance: balance || faker.number.int({ min: 1000, max: 2147483647 }),
+    balance: balance || faker.number.int({ min: 100, max: 2147483647 }),
   };
 }
 
@@ -26,6 +26,6 @@ export function mockParticipant(balance?: number): Participant {
 
 export async function createParticipant(balance?: number) {
   return prisma.participant.create({
-    data: mockParticipant(balance),
+    data: mockParticipantInput(balance),
   });
 }

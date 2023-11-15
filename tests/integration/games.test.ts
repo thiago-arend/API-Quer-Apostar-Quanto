@@ -5,15 +5,13 @@ import { cleanDb } from "../utils";
 import prisma from "../../src/config/database";
 import { mockGameInput } from "../factories/games.factory";
 
-beforeEach(() => {
-  cleanDb();
-});
-
 const api = supertest(app);
 
 describe("Games Integration Tests", () => {
   describe("POST /games", () => {
     it("should return 201 and a game if a valid game can be created", async () => {
+      await cleanDb();
+
       const game = mockGameInput(false);
       const { status, body } = await api.post("/games").send(game);
 
@@ -33,6 +31,8 @@ describe("Games Integration Tests", () => {
       const gamePersisted = await prisma.game.findUnique({
         where: { id: body.id },
       });
+      console.log(gamePersisted);
+
       expect(gamePersisted).not.toBeNull();
       expect(body).toEqual({
         ...gamePersisted,

@@ -18,21 +18,25 @@ export function mockGameInput(equalNames: boolean): GameBodyInput {
 
 export function mockGame(isFinished?: boolean, homeTeamScore?: number, awayTeamScore?: number): Game {
   const validDate = faker.date.recent();
-  const gameInput = mockGameInput(false);
 
   return {
-    homeTeamScore: homeTeamScore || faker.number.int({ min: 0, max: 10 }),
-    awayTeamScore: awayTeamScore || faker.number.int({ min: 0, max: 10 }),
+    homeTeamScore: homeTeamScore === undefined ? faker.number.int({ min: 0, max: 10 }) : homeTeamScore,
+    awayTeamScore: awayTeamScore === undefined ? faker.number.int({ min: 0, max: 10 }) : awayTeamScore,
     isFinished: isFinished !== undefined ? isFinished : faker.datatype.boolean(),
     id: faker.number.int({ min: 1, max: 2147483647 }),
     createdAt: validDate,
     updatedAt: validDate,
-    ...gameInput,
+    ...mockGameInput(false),
   };
 }
 
 export async function createGame(isFinished?: boolean, homeTeamScore?: number, awayTeamScore?: number) {
   return prisma.game.create({
-    data: mockGame(isFinished, homeTeamScore, awayTeamScore),
+    data: {
+      ...mockGameInput(false),
+      homeTeamScore: homeTeamScore === undefined ? 0 : homeTeamScore,
+      awayTeamScore: awayTeamScore === undefined ? 0 : awayTeamScore,
+      isFinished: isFinished === undefined ? false : isFinished,
+    },
   });
 }

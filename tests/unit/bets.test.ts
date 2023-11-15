@@ -15,10 +15,6 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-afterAll(() => {
-  jest.clearAllMocks();
-});
-
 describe("Bets Unit Tests", () => {
   describe("when creating a bet", () => {
     it("should return status 404 and error message when could not find a participant", () => {
