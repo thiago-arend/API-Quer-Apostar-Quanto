@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { Game } from "@prisma/client";
-import { GameBodyInput } from "../../src/protocols/index";
+import { GameBodyInput, GameFinishInput } from "../../src/protocols/index";
 import prisma from "config/database";
 
 export function mockGameInput(equalNames: boolean): GameBodyInput {
@@ -14,6 +14,13 @@ export function mockGameInput(equalNames: boolean): GameBodyInput {
   }
 
   return gameInput;
+}
+
+export function mockFinishedGameInput(awayTeamScore?: number, homeTeamScore?: number): GameFinishInput {
+  return {
+    homeTeamScore: homeTeamScore === undefined ? faker.number.int({ min: 0, max: 10 }) : homeTeamScore,
+    awayTeamScore: awayTeamScore === undefined ? faker.number.int({ min: 0, max: 10 }) : awayTeamScore,
+  };
 }
 
 export function mockGame(isFinished?: boolean, homeTeamScore?: number, awayTeamScore?: number): Game {

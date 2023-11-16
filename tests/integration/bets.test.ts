@@ -7,13 +7,21 @@ import { createParticipant } from "../factories/participants.factory";
 import { createGame } from "../factories/games.factory";
 import { mockBetInput } from "../factories/bets.factory";
 
+beforeEach(async () => {
+  await cleanDb();
+});
+
 const api = supertest(app);
 
 describe("Bets Integration Tests", () => {
   describe("POST /bets", () => {
-    it("should return 201 and a bet if a valid bet can be created", async () => {
-      await cleanDb();
+    it("should return 422 in case of missing or invalid body content", async () => {
+      const { status } = await api.post("/bets").send({});
 
+      expect(status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it("should return 201 and a bet if a valid bet can be created", async () => {
       const participant = await createParticipant();
       const game = await createGame(false);
       const betInput = mockBetInput(participant.id, game.id, participant.balance);
@@ -35,7 +43,6 @@ describe("Bets Integration Tests", () => {
       const betPersisted = await prisma.bet.findUnique({
         where: { id: body.id },
       });
-      console.log(betPersisted);
 
       expect(betPersisted).not.toBeNull();
       expect(body).toEqual({
@@ -43,12 +50,6 @@ describe("Bets Integration Tests", () => {
         createdAt: betPersisted.createdAt.toISOString(),
         updatedAt: betPersisted.updatedAt.toISOString(),
       });
-    });
-
-    it("should return 422 in case of missing or invalid body content", async () => {
-      const { status } = await api.post("/bets").send({});
-
-      expect(status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
   });
 });

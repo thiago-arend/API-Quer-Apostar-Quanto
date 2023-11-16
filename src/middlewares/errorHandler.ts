@@ -8,7 +8,6 @@ export type ApplicationError = {
 
 /* eslint-disable */
 export function handleApplicationErrors(err: ApplicationError | Error, _req: Request, res: Response, _next: NextFunction) {
-  console.log(err);
 
   if (err.name === "InsufficientBalanceForParticipantError" || err.name === "GameWithEqualTeamNamesError" || err.name === "IdIsNotValidError") {
     return res.status(httpStatus.BAD_REQUEST).send({

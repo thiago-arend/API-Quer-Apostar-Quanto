@@ -10,7 +10,7 @@
     "dev": "npm run dev:load-envs -- nodemon ./src/server.ts",
     "test:load-envs": "dotenv -e .env.test",
     "dev:load-envs": "dotenv -e .env.development",
-    "test": "npm run test:load-envs jest --passWithNoTests --runInBand",
+    "test": "npm run test:load-envs -- jest -- --passWithNoTests --runInBand",
     "test:coverage": "npm run test:load-envs -- jest -- --coverage --runInBand",
     "test:coverage:sumary": "jest --coverage --runInBand --coverageReporters=json-summary --coverageDirectory=coverage --collectCoverageFrom='**/*.ts'",
     "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
