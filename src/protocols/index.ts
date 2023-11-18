@@ -5,5 +5,8 @@ export type ParticipantTableInput = ParticipantBodyInput;
 export type GameTableInput = Omit<Game, "id" | "createdAt" | "updatedAt">;
 export type GameBodyInput = Omit<GameTableInput, "homeTeamScore" | "awayTeamScore" | "isFinished">;
 export type GameFinishInput = Omit<GameTableInput, "homeTeamName" | "awayTeamName" | "isFinished">;
+export type GameWithBets = Game & {
+  bets: Bet[];
+};
 export type BetTableInput = Omit<Bet, "id" | "createdAt" | "updatedAt">;
 export type BetBodyInput = Omit<BetTableInput, "status" | "amountWon">;

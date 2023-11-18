@@ -2,7 +2,7 @@ import { Bet } from "@prisma/client";
 import { betsRepository } from "../repositories/bets.repository";
 import { gameIsFinished } from "../errors/gameIsFinishedError";
 import { gameWithEqualTeamNames } from "../errors/gameWithEqualTeamNamesError";
-import { GameBodyInput, GameFinishInput, GameTableInput } from "../protocols/index";
+import { GameBodyInput, GameFinishInput, GameTableInput, GameWithBets } from "../protocols/index";
 import { gamesRepository } from "../repositories/games.repository";
 import { calculateAmountWont, wonBet } from "../utils/index";
 import { participantsRepository } from "../repositories/participants.repository";
@@ -66,7 +66,15 @@ async function getWithBets(id: number) {
   const gameWithBets = await gamesRepository.getWithBets(id);
   if (!gameWithBets) throw notFound();
 
-  return gameWithBets;
+  const gameWithBetsCopy = { ...gameWithBets };
+  delete gameWithBetsCopy.bet;
+
+  const gameWithBetsFormatted: GameWithBets = {
+    ...gameWithBetsCopy,
+    bets: gameWithBets.bet,
+  };
+
+  return gameWithBetsFormatted;
 }
 
 async function finishGame(id: number, finishedGame: GameFinishInput) {
