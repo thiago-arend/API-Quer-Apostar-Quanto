@@ -20,8 +20,6 @@ model Bet {
   updatedAt     DateTime    @updatedAt
   game          Game        @relation(fields: [gameId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   participant   Participant @relation(fields: [participantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@map("bets")
 }
 
 model Game {
