@@ -6,29 +6,23 @@ export type ApplicationError = {
   message: string;
 };
 
+const errors = {
+  ["InsufficientBalanceForParticipantError"]: httpStatus.BAD_REQUEST,
+  ["GameWithEqualTeamNamesError"]: httpStatus.BAD_REQUEST,
+  ["IdIsNotValidError"]: httpStatus.BAD_REQUEST,
+  ["BetValueIsBiggerThanParticipantsBalanceError"]: httpStatus.FORBIDDEN,
+  ["AttemptToBetOnFinishedGameError"]: httpStatus.FORBIDDEN,
+  ["MinimumBetValueError"]: httpStatus.FORBIDDEN,
+  ["GameIsFinished"]: httpStatus.FORBIDDEN,
+  ["ParticipantsWithEqualNamesError"]: httpStatus.CONFLICT,
+  ["NotFoundError"]: httpStatus.NOT_FOUND,
+};
+
 /* eslint-disable */
 export function handleApplicationErrors(err: ApplicationError | Error, _req: Request, res: Response, _next: NextFunction) {
 
-  if (err.name === "InsufficientBalanceForParticipantError" || err.name === "GameWithEqualTeamNamesError" || err.name === "IdIsNotValidError") {
-    return res.status(httpStatus.BAD_REQUEST).send({
-      message: err.message,
-    });
-  }
-
-  if (err.name === "BetValueIsBiggerThanParticipantsBalanceError" || err.name === "AttemptToBetOnFinishedGameError" || err.name === "MinimumBetValueError" || err.name === "GameIsFinished") {
-    return res.status(httpStatus.FORBIDDEN).send({
-      message: err.message,
-    });
-  }
-
-  if (err.name === "ParticipantsWithEqualNamesError") {
-    return res.status(httpStatus.CONFLICT).send({
-      message: err.message,
-    });
-  }
-
-  if (err.name === "NotFoundError") {
-    return res.status(httpStatus.NOT_FOUND).send({
+  if (errors[err.name]) {
+    return res.status(errors[err.name]).send({
       message: err.message,
     });
   }

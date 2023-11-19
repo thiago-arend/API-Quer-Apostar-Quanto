@@ -1,150 +1,300 @@
-# Bet API
 
-## About
+# Technical Challenge - API Quer Apostar Quanto?
 
-This is an API for a betting house. You can use multiple routes simulating interaction at a real bet house.
+This challenge consisted on developing a bets house API, implementing some useful services for dealing with bets, games and participants.
 
-## Deploy
 
-You can test this API routes using deploy url: https://bet-api-ies2.onrender.com
 
-## How to run for development
 
-1. Clone this repository
-2. Install all dependencies
+## How to run this project locally?
 
-```bash
-npm i
-```
+***Note: this project uses version 20.8.0 of Node.js***
 
-3. Create a PostgreSQL database with whatever name you want
-4. Configure the `.env.development` file using the `.env.example` file (see "Running application locally or inside docker section" for details)
-5. Run all migrations
+    1. Clone this repository
 
 ```bash
-npm run dev:migration:run
+  git clone https://github.com/thiago-arend/desafio-tecnico-bet-api.git
 ```
-
-6. Run the back-end in a development environment:
+#
+    2. Open bash inside the folder where you cloned the repository, then access project repository
 
 ```bash
-npm run dev
+  cd desafio-tecnico-bet-api
 ```
-
-## How to run tests
-
-1. Follow the steps in the last section
-2. Configure the `.env.test` file using the `.env.example` file (see "Running application locally or inside docker" section for details)
-3. Run all migrations:
+#
+    3. Install all dependencies
 
 ```bash
-npm run test:migration:run
+  npm install
 ```
-
-4. Run test:
+#
+    4. Copy and paste the file ".env.example" and save it to a new file named ".env.develoment". Next step is to change environment variables POSTGRES_USERNAME, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT so that they hold your development database information.
+#
+    5. If you wish to run automated tests on this project, follow the exactly same steps from step 4, changing the file name to ".env.test" and environment variables so that they point to your tests database.
+#
+    6. Create the development database
 
 ```bash
-npm run test
+  npm run dev:migration:run
 ```
-
-## Building and starting for production
+#
+    7. If you wish to run automated tests on this project, create the tests database
 
 ```bash
-npm run build
-npm start
+  npm run test:migration:run
+```
+## How to run tests on this project?
+
+Execute the following script at the same folder where package.json file is located
+
+```bash
+  npm run test
 ```
 
-## Running migrations or generate prisma clients
+The script above will run tests for all entities in the application. If you wish to specify an entity for isolated testing, run the following script, switching 'feat' to the entity you want to test (bets, games or participants)
 
-Before running migrations make sure you have a postgres db running based on `.env.development` or `.env.test` file for each environment.
+```bash
+  npm run test feat
+```
 
-You can operate on databases for different environments, but it is necessary to populate correct env variables for each environment first, so in order to perform db operations type the following commands:
+## List of API routes
 
-- `npm run dev:migration:run` - run migrations for development environment by loading envs from .env.development file. It uses [dotenv-cli](https://github.com/entropitor/dotenv-cli#readme) to load envs from .env.development file.
-- `npm run test:migration:run` - the same, but for test environment.
+All routes can be tested using an API Client of your preference, through deploy link https://bet-api-ies2.onrender.com
 
-## What to do when add new ENV VARIABLES
+<details>
+<summary> 
+<b><font color="#D9730D">POST</font></b><font> /participants
+</summary>
 
-There are several things you need to do when you add new ENV VARIABLES:
-- Add them to `.env.example` file
-- Add them to your local `.env.development` and `.env.test` files
-
-
-## Routes available
-### POST /participants
-Creates a participant with initial balance.
-
-Entry: name and initial participant balance.
-```json
+* Creates a participant with specified balance
+#
+* Input:
+```typescript
 {
-	name: string,
-	balance: number
+	name: string;
+	balance: number; // represented in cents (e.g. 1000 cents = $10.00)
 }
 ```
-​
-Out: object representing a participant.
-```json
+#
+* Output: object representing created participant
+```typescript
 {
-	id: number,
-	createdAt: string,
-	updatedAt: string,
-	name: string,
+	id: number;
+	name: string;
 	balance: number;
+    createdAt: string;
+	updatedAt: string;
 }
 ```
+#
+* Rules
+  * Name must be unique, otherwise you'll receive <font color="red">409 (Conflict Error)</font>.
+  * Balance must be inputed in cents (e.g. 1000 cents = $10.00).
+  * Balance must not be less than $10.00 (1000 cents), otherwise you'll receive <font color="red">400 (Bad Request Error)</font>.
+</details>
 
-### POST /games
-Creates a new game, with itial score 0x0 and not finished.
+<details>
+<summary> 
+<b><font color="#D9730D">POST</font></b><font> /games 
+</summary>
 
-Entry: home and away team names.
-```json
+* Creates an open game with score 0x0.
+#
+* Input:
+
+```typescript
 {
-	homeTeamName: string,
-	awayTeamName: string
+	homeTeamName: string;
+	awayTeamName: string;
 }
 ```
+#
+* Output: object representing created game
 
-Out: object representing a game.
-```json
+```typescript
 {
-	id: number,
-	createdAt: string,
-	updatedAt: string,
-	homeTeamName: string,
-	awayTeamName: string,
-	homeTeamScore: number,
-	awayTeamScore: number,
-	isFinished: boolean
+	id: number;
+	createdAt: string;
+	updatedAt: string;
+	homeTeamName: string;
+	awayTeamName: string;
+	homeTeamScore: number; // initialy 0
+	awayTeamScore: number; // initialy 0
+	isFinished: boolean; // initialy false
 }
 ```
 
-### POST /bets
-Register a bet from a participant in a specific game. 
-The bet amount is immediately deducted from the participant's balance.
+#
+* Rules
+  * Team names must be different, otherwise you'll receive <font color="red">400 (Bad Request)</font>.
+</details>
 
-Entry:
-```json
+<details>
+<summary> 
+<b><font color="#D9730D">POST</font></b><font> /bets 
+</summary>
+
+* Register a bet from a participant in a specific game. The bet amount is immediately deducted from the participant's balance.
+#
+* Input:
+
+```typescript
 { 
-	homeTeamScore: number,
-	awayTeamScore: number, 
-	amountBet: number,
-	gameId: number,
-	participantId: number,
+	homeTeamScore: number;
+	awayTeamScore: number; 
+	amountBet: number; // represented in cents (e.g. $10.00 = 1000)
+	gameId: number; 
+	participantId: number;
 }
 ```
-​
-Out: object representing a bet.
-```json
+#
+* Output: object representing created bet
+
+```typescript
 {
-	id: number,
-	createdAt: string,
-	updatedAt: string,
-	homeTeamScore: number,
-	awayTeamScore: number,
-	amountBet: number,
-	gameId: number;,
-	participantId: number,
-	status: string,
-	amountWon: number || null
+	id: number;
+	createdAt: string;
+	updatedAt: string;
+	homeTeamScore: number;
+	awayTeamScore: number;
+	amountBet: number; // represented in cents (e.g. $10.00 = 1000)
+	gameId: number; 
+	participantId: number;
+	status: string; // may be PENDING, WON or LOST
+	amountWon: number || null; // null while bet is PENDING; number if bet has WON or LOST status, with amount won represented in cents
 }
 ```
+#
+* Rules
+  * Game and participant's id must exist, otherwise you'll get <font color="red">404 (Not Found)</font>.
+  * Game cannot bet already finished by the time you create a bet, otherwise you'll get <font color="red">403 (Forbidden)</font>.
+  * Bet amount must not be greater than participant's balance, otherwise you'll receive <font color="red">403 (Forbidden)</font>.
+  * Bet amount must not be lesser than $1.00 (100), otherwise you'll receive <font color="red">403 (Forbidden)</font>.  
+
+</details>
+
+<details>
+<summary> 
+<b><font color="#D9730D">POST</font></b><font> /games/:id/finish 
+</summary>
+
+* Finishes a game and consequently update all bets linked to it, calculating the amount won in each one and updating the balance of the winning participants.
+#
+* Input: game final score
+
+```typescript
+{
+	homeTeamScore: number;
+	awayTeamScore: number;
+}
+```
+#
+* Output: updated game object
+
+```typescript
+{
+	id: number;
+	createdAt: string;
+	updatedAt: string;
+	homeTeamName: string;
+	awayTeamName: string;
+	homeTeamScore: number;
+	awayTeamScore: number;
+	isFinished: boolean; // will be set to true
+}
+```
+#
+* Rules
+  * Game's id must be valid (integer equal or greater to 1), otherwise you'll get <font color="red">400 (Bad Request)</font>.
+  * Game's id must exist, otherwise you'll get <font color="red">404 (Not Found)</font>.
+  * You must not finish a game that has been already finished, otherwise you'll get <font color="red">403 (Forbidden)</font>.
+</details>
+
+<details>
+<summary> 
+<b><font color="#448375">GET</font></b><font> /participants 
+</summary>
+
+* Returns all participants and their respective balances.
+#
+* Output: array containing all participants
+
+```typescript
+[
+	{
+		id: number;
+		createdAt: string;
+		updatedAt: string;
+		name: string;
+		balance: number; // represented in cents (e.g. $10.00 = 1000)
+	}, 
+	{...}
+]
+```
+</details>
+
+<details>
+<summary> 
+<b><font color="#448375">GET</font></b><font> /games 
+</summary>
+
+* Returns all registered games.
+#
+* Output: array containing all games
+
+```typescript
+[
+	{
+		id: number;
+		createdAt: string;
+		updatedAt: string;
+		homeTeamName: string;
+		awayTeamName: string;
+		homeTeamScore: number;
+		awayTeamScore: number;
+		isFinished: boolean;
+	},
+	{...}
+]
+```
+</details>
+
+<details>
+<summary> 
+<b><font color="#448375">GET</font></b><font> /games/:id 
+</summary>
+
+* Returns the data for a game along with the bets linked to it.
+#
+* Output: object representing a game and an array containing all bet linked to it
+
+```typescript
+{
+	id: number;
+	createdAt: string;
+	updatedAt: string;
+	homeTeamName: string;
+	awayTeamName: string;
+	homeTeamScore: number;
+	awayTeamScore: number;
+	isFinished: boolean;
+	bets: {
+		id: number;
+		createdAt: string;
+		updatedAt: string;
+		homeTeamScore: number;
+		awayTeamScore: number;
+		amountBet: number; // represented in cents (e.g. $10.00 = 1000)
+		gameId: number; 
+		participantId: number;
+		status: string; // may be PENDING, WON or LOST
+		amountWon: number || null; // null while bet is PENDING; number if bet has WON or LOST status, with amount won represented in cents
+	}[]
+}
+```
+
+#
+* Rules
+  * Game's id must be valid (integer equal or greater to 1), otherwise you'll get <font color="red">400 (Bad Request)</font>.
+  * Game's id must exist, otherwise you'll get <font color="red">404 (Not Found)</font>.
+</details>
