@@ -66,6 +66,7 @@ All routes can be tested using an API Client of your preference, through deploy 
 <b><font color="#D9730D">POST</font></b><font> /participants
 </summary>
 <br>
+
 * Creates a participant with specified balance
 #
 * Input:
@@ -98,6 +99,7 @@ All routes can be tested using an API Client of your preference, through deploy 
 <b><font color="#D9730D">POST</font></b><font> /games 
 </summary>
 <br>
+
 * Creates an open game with score 0x0.
 #
 * Input:
@@ -134,6 +136,7 @@ All routes can be tested using an API Client of your preference, through deploy 
 <b><font color="#D9730D">POST</font></b><font> /bets 
 </summary>
 <br>
+
 * Register a bet from a participant in a specific game. The bet amount is immediately deducted from the participant's balance.
 #
 * Input:
@@ -178,6 +181,7 @@ All routes can be tested using an API Client of your preference, through deploy 
 <b><font color="#D9730D">POST</font></b><font> /games/:id/finish 
 </summary>
 <br>
+
 * Finishes a game and consequently update all bets linked to it, calculating the amount won in each one and updating the balance of the winning participants.
 #
 * Input: game final score
@@ -215,6 +219,7 @@ All routes can be tested using an API Client of your preference, through deploy 
 <b><font color="#448375">GET</font></b><font> /participants 
 </summary>
 <br>
+
 * Returns all participants and their respective balances.
 #
 * Output: array containing all participants
@@ -238,6 +243,7 @@ All routes can be tested using an API Client of your preference, through deploy 
 <b><font color="#448375">GET</font></b><font> /games 
 </summary>
 <br>
+
 * Returns all registered games.
 #
 * Output: array containing all games
@@ -264,6 +270,7 @@ All routes can be tested using an API Client of your preference, through deploy 
 <b><font color="#448375">GET</font></b><font> /games/:id 
 </summary>
 <br>
+
 * Returns the data for a game along with the bets linked to it.
 #
 * Output: object representing a game and an array containing all bet linked to it
