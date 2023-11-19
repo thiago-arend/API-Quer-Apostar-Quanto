@@ -13,6 +13,12 @@ async function get(id: number) {
   });
 }
 
+async function getByName(name: string) {
+  return prisma.participant.findUnique({
+    where: { name },
+  });
+}
+
 async function getAll() {
   return prisma.participant.findMany();
 }
@@ -27,6 +33,7 @@ async function updateBalance(id: number, balance: number) {
 export const participantsRepository = {
   create,
   get,
+  getByName,
   getAll,
   updateBalance,
 };
