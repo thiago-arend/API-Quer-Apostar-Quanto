@@ -2,7 +2,7 @@ import { Bet } from "@prisma/client";
 import { betsRepository } from "../repositories/bets.repository";
 import { gameIsFinished } from "../errors/gameIsFinishedError";
 import { gameWithEqualTeamNames } from "../errors/gameWithEqualTeamNamesError";
-import { GameBodyInput, GameFinishInput, GameTableInput, GameWithBets } from "../protocols/index";
+import { BetsData, GameBodyInput, GameFinishInput, GameTableInput, GameWithBets } from "../protocols/index";
 import { gamesRepository } from "../repositories/games.repository";
 import { calculateAmountWont, wonBet } from "../utils/index";
 import { participantsRepository } from "../repositories/participants.repository";
@@ -30,12 +30,11 @@ function calculateAllBetsAndWinningBetsBalance(betsList: Bet[], finishedGame: Ga
 async function updateBetsStatusAndParticipantsBalance(
   betsList: Bet[],
   finishedGame: GameFinishInput,
-  allBetsTotalValue: number,
-  allWinnerBetsTotalValue: number,
+  betsData: BetsData,
 ) {
   betsList.forEach(async (b: Bet) => {
     if (wonBet(b, finishedGame)) {
-      const amountWon = Math.floor(calculateAmountWont(b.amountBet, allBetsTotalValue, allWinnerBetsTotalValue));
+      const amountWon = Math.floor(calculateAmountWont(b.amountBet, betsData));
       const participant = await participantsRepository.get(b.participantId);
       const betUpdate = generateBetUpdateParams(true, amountWon);
 
@@ -94,20 +93,24 @@ async function getWithBets(id: number) {
   return gameWithBetsFormatted;
 }
 
-async function finishGame(id: number, finishedGame: GameFinishInput) {
-  const game = await gamesRepository.get(id);
+async function validateIfGameIsFinishedOrThrow(gameId: number) {
+  const game = await gamesRepository.get(gameId);
   if (!game) throw notFound();
   if (game.isFinished) throw gameIsFinished();
+}
+
+async function finishGame(id: number, finishedGame: GameFinishInput) {
+  await validateIfGameIsFinishedOrThrow(id);
 
   return await prisma.$transaction(async () => {
     const updatedGame = await gamesRepository.update(id, finishedGame.homeTeamScore, finishedGame.awayTeamScore);
     const betsList = await betsRepository.getAllByGameId(id);
 
-    const { allBetsTotalValue, allWinnerBetsTotalValue } = calculateAllBetsAndWinningBetsBalance(
-      betsList,
-      finishedGame,
-    );
-    await updateBetsStatusAndParticipantsBalance(betsList, finishedGame, allBetsTotalValue, allWinnerBetsTotalValue);
+    const calculatedResult = calculateAllBetsAndWinningBetsBalance(betsList, finishedGame);
+    const { allBetsTotalValue, allWinnerBetsTotalValue } = calculatedResult;
+
+    const betsData: BetsData = { allBetsTotalValue, allWinnerBetsTotalValue };
+    await updateBetsStatusAndParticipantsBalance(betsList, finishedGame, betsData);
     return updatedGame;
   });
 }
