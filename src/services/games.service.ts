@@ -37,12 +37,29 @@ async function updateBetsStatusAndParticipantsBalance(
     if (wonBet(b, finishedGame)) {
       const amountWon = Math.floor(calculateAmountWont(b.amountBet, allBetsTotalValue, allWinnerBetsTotalValue));
       const participant = await participantsRepository.get(b.participantId);
-      await betsRepository.update(b.id, amountWon);
+      const betUpdate = generateBetUpdateParams(true, amountWon);
+
+      await betsRepository.update(b.id, betUpdate);
       await participantsRepository.updateBalance(b.participantId, participant.balance + amountWon);
     } else {
-      await betsRepository.update(b.id);
+      const betUpdate = generateBetUpdateParams(true);
+      await betsRepository.update(b.id, betUpdate);
     }
   });
+}
+
+function generateBetUpdateParams(participantWonGame: boolean, amountWon?: number) {
+  if (participantWonGame) {
+    return {
+      status: "WON",
+      amountWon,
+    };
+  } else {
+    return {
+      status: "LOST",
+      amountWon: 0,
+    };
+  }
 }
 
 async function create(game: GameBodyInput) {
@@ -66,12 +83,12 @@ async function getWithBets(id: number) {
   const gameWithBets = await gamesRepository.getWithBets(id);
   if (!gameWithBets) throw notFound();
 
-  const gameWithBetsCopy = { ...gameWithBets };
-  delete gameWithBetsCopy.bet;
+  const betsCopy = gameWithBets.bet;
+  delete gameWithBets.bet;
 
   const gameWithBetsFormatted: GameWithBets = {
-    ...gameWithBetsCopy,
-    bets: gameWithBets.bet,
+    ...gameWithBets,
+    bets: betsCopy,
   };
 
   return gameWithBetsFormatted;

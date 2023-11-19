@@ -1,5 +1,5 @@
 import prisma from "../config/database";
-import { BetTableInput } from "../protocols/index";
+import { BetTableInput, BetUpdateParams } from "../protocols/index";
 
 async function create(bet: BetTableInput) {
   return prisma.bet.create({
@@ -7,16 +7,7 @@ async function create(bet: BetTableInput) {
   });
 }
 
-async function update(id: number, amountWon?: number) {
-  const betUpdate = {
-    status: "LOST",
-    amountWon: 0,
-  };
-
-  if (amountWon) {
-    (betUpdate.status = "WON"), (betUpdate.amountWon = amountWon);
-  }
-
+async function update(id: number, betUpdate: BetUpdateParams) {
   return prisma.bet.update({
     where: { id },
     data: { ...betUpdate },

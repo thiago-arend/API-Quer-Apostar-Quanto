@@ -10,3 +10,7 @@ export type GameWithBets = Game & {
 };
 export type BetTableInput = Omit<Bet, "id" | "createdAt" | "updatedAt">;
 export type BetBodyInput = Omit<BetTableInput, "status" | "amountWon">;
+export type BetUpdateParams = Omit<
+  BetTableInput,
+  "homeTeamScore" | "awayTeamScore" | "amountBet" | "gameId" | "participantId"
+>;
