@@ -3,7 +3,7 @@ import { BetsData, GameFinishInput } from "../protocols/index";
 
 export function calculateAmountWont(amountBet: number, betsData: BetsData) {
   const { allBetsTotalValue, allWinnerBetsTotalValue } = betsData;
-  const houseFee = 0.3; // this variable houseFee holds the fee percentage of the bet house
+  const houseFee = 0.3; // variable houseFee holds the fee percentage of the bet house
   return (amountBet / allWinnerBetsTotalValue) * allBetsTotalValue * (1 - houseFee);
 }
 
