@@ -41,7 +41,7 @@ async function updateBetsStatusAndParticipantsBalance(
       await betsRepository.update(b.id, betUpdate);
       await participantsRepository.updateBalance(b.participantId, participant.balance + amountWon);
     } else {
-      const betUpdate = generateBetUpdateParams(true);
+      const betUpdate = generateBetUpdateParams(false);
       await betsRepository.update(b.id, betUpdate);
     }
   });

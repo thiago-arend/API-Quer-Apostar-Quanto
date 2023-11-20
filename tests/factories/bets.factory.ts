@@ -11,8 +11,8 @@ export function mockBetInput(
   awayTeamScore?: number,
 ): BetBodyInput {
   return {
-    homeTeamScore: homeTeamScore || faker.number.int({ min: 0, max: 10 }),
-    awayTeamScore: awayTeamScore || faker.number.int({ min: 0, max: 10 }),
+    homeTeamScore: homeTeamScore === undefined ? faker.number.int({ min: 0, max: 10 }) : homeTeamScore,
+    awayTeamScore: awayTeamScore === undefined ? faker.number.int({ min: 0, max: 10 }) : awayTeamScore,
     amountBet,
     gameId,
     participantId,

@@ -68,9 +68,20 @@ describe("Games Integration Tests", () => {
       expect(status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
     });
 
-    it("it should return status 200 and a game with updated data matching the provided id", async () => {
+    it("it should return status 200 and a game with updated data matching the provided id, reflecting on participant and bets tables", async () => {
       const game = await createGame();
-      const finishGameInput = mockFinishedGameInput();
+      // const participantOne = await createParticipant(10000);
+      // const participantTwo = await createParticipant(8000);
+
+      // const betOneInput = mockBetTableInput(participantOne.id, game.id, participantOne.balance, undefined, undefined, 2, 2);
+      // const betOne = await createBet(betOneInput);
+
+      // const betTwoInput = mockBetTableInput(participantTwo.id, game.id, 5000, undefined, undefined, 2, 0);
+      // const betTwo = await createBet(betTwoInput);
+
+      // console.log(participantOne, betOne, participantTwo, betTwo);
+
+      const finishGameInput = mockFinishedGameInput(2, 2);
 
       const { status, body } = await api.post(`/games/${game.id}/finish`).send(finishGameInput);
 
@@ -87,6 +98,30 @@ describe("Games Integration Tests", () => {
           isFinished: true,
         }),
       );
+
+      // // participant one updates
+      // const participantOneWon = await prisma.participant.findUnique({
+      //   where: { id: participantOne.id }
+      // });
+      // expect(participantOneWon.balance).toBe(10500); // participants table
+
+      // const participantOneBet = await prisma.bet.findUnique({
+      //   where: { id: betOne.id }
+      // });
+      // expect(participantOneBet.status).toBe("WON"); // bets table
+      // expect(participantOneBet.amountWon).toBe(10500);
+
+      // // participant two updates
+      // const participantTwoLost = await prisma.participant.findUnique({
+      //   where: { id: participantTwo.id }
+      // });
+      // expect(participantTwoLost.balance).toBe(3000); // participants table
+
+      // const participantTwoBet = await prisma.bet.findUnique({
+      //   where: { id: betTwo.id }
+      // });
+      // expect(participantTwoBet.status).toBe("LOST"); // bets table
+      // expect(participantTwoBet.amountWon).toBe(0);
     });
   });
 
