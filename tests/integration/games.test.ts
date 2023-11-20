@@ -4,6 +4,8 @@ import app from "../../src/app";
 import { cleanDb } from "../utils";
 import prisma from "../../src/config/database";
 import { createGame, mockFinishedGameInput, mockGameInput } from "../factories/games.factory";
+import { createParticipant } from "../factories/participants.factory";
+import { createBet, mockBetTableInput } from "../factories/bets.factory";
 
 beforeEach(async () => {
   await cleanDb();
@@ -115,6 +117,12 @@ describe("Games Integration Tests", () => {
   });
 
   describe("GET /games/:id", () => {
+    it("it should return status 400 when providing an invalid id", async () => {
+      const { status } = await api.get(`/games/0`);
+
+      expect(status).toBe(httpStatus.BAD_REQUEST);
+    });
+
     it("should return 404 and error message when the supplied id does not match a existent game", async () => {
       const game = await createGame();
       await prisma.game.delete({
@@ -127,15 +135,43 @@ describe("Games Integration Tests", () => {
 
     it("should return status 200 and a game when the supplied id matches a existent game", async () => {
       const game = await createGame();
+      const participantOne = await createParticipant();
+      const participantTwo = await createParticipant();
+
+      const betOneInput = mockBetTableInput(participantOne.id, game.id, participantOne.balance);
+      await createBet(betOneInput);
+
+      const betTwoInput = mockBetTableInput(participantTwo.id, game.id, participantTwo.balance);
+      await createBet(betTwoInput);
 
       const { status, body } = await api.get(`/games/${game.id}`);
 
       expect(status).toBe(httpStatus.OK);
+      expect(body.bets).toHaveLength(2);
       expect(body).toEqual(
         expect.objectContaining({
-          ...game,
-          createdAt: game.createdAt.toISOString(),
-          updatedAt: game.updatedAt.toISOString(),
+          id: expect.any(Number),
+          homeTeamScore: expect.any(Number),
+          awayTeamScore: expect.any(Number),
+          homeTeamName: expect.any(String),
+          awayTeamName: expect.any(String),
+          isFinished: expect.any(Boolean),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          bets: expect.arrayContaining([
+            expect.objectContaining({
+              id: expect.any(Number),
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+              status: expect.any(String),
+              amountWon: null,
+              amountBet: expect.any(Number),
+              gameId: expect.any(Number),
+              participantId: expect.any(Number),
+              homeTeamScore: expect.any(Number),
+              awayTeamScore: expect.any(Number),
+            }),
+          ]),
         }),
       );
     });
