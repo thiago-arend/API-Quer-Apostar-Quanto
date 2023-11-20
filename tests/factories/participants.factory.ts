@@ -4,9 +4,9 @@ import { ParticipantBodyInput } from "../../src/protocols/index";
 import prisma from "config/database";
 
 // by default, generates a balance value that fits in integer type
-export function mockParticipantInput(balance?: number): ParticipantBodyInput {
+export function mockParticipantInput(balance?: number, name?: string): ParticipantBodyInput {
   return {
-    name: faker.person.fullName(),
+    name: name || faker.person.fullName(),
     balance: balance || faker.number.int({ min: 100, max: 2147483647 }),
   };
 }
