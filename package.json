@@ -11,7 +11,6 @@
     "test:load-envs": "dotenv -e .env.test",
     "dev:load-envs": "dotenv -e .env.development",
     "test": "npm run test:load-envs prisma migrate deploy && npm run test:load-envs -- jest -- --passWithNoTests --coverage --runInBand",
-    "test:coverage:sumary": "jest --coverage --runInBand --coverageReporters=json-summary --coverageDirectory=coverage --collectCoverageFrom='**/*.ts'",
     "dev:migration:run": "npm run dev:load-envs prisma migrate dev",
     "test:migration:run": "npm run test:load-envs prisma migrate dev",
     "lint": "eslint .",
