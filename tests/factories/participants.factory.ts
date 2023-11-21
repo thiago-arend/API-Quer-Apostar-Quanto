@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { Participant } from "@prisma/client";
 import { ParticipantBodyInput } from "../../src/protocols/index";
-import prisma from "config/database";
+import prisma from "../../src/config/database";
 
 // by default, generates a balance value that fits in integer type
 export function mockParticipantInput(balance?: number, name?: string): ParticipantBodyInput {
@@ -25,7 +25,8 @@ export function mockParticipant(balance?: number): Participant {
 }
 
 export async function createParticipant(balance?: number) {
+  const input: ParticipantBodyInput = mockParticipantInput(balance);
   return prisma.participant.create({
-    data: mockParticipantInput(balance),
+    data: input,
   });
 }
